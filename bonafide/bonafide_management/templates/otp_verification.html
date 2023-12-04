@@ -1,0 +1,25 @@
+<!-- otp_verification.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Verification</title>
+    <!-- Add your styling if necessary -->
+</head>
+
+<body>
+    <div>
+        <h2>OTP Verification</h2>
+        <form method="post" action="{% url 'verify_login_otp' %}">
+            {% csrf_token %}
+            <label for="otp">Enter OTP sent to your email:</label>
+            <input type="text" name="otp" required>
+            <button type="submit">Verify OTP</button>
+        </form>
+    </div>
+</body>
+
+</html>
+

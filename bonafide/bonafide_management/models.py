@@ -8,11 +8,11 @@ from phone_field import PhoneField
 from django.utils import timezone
 
 class CustomUser(AbstractUser):
-    student_id = models.CharField(max_length=10, blank=True, null=True)
+    email = models.CharField(max_length=100, blank=True, null=True)
     # Add other fields as needed
 
     def __str__(self):
-        return self.username 
+        return self.email 
 
 class Student(models.Model):
     Name = models.CharField(max_length=100)

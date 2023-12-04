@@ -100,56 +100,12 @@ button:hover{
 	transform: scale(.6);
 }
 
-        /* body {
-            font-family: Arial, sans-serif;
-        }
-
-        .container {
-            max-width: 400px;
-            margin: 0 auto;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        form {
-            display: flex;
-            flex-direction: column;
-        }
-
-        label {
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        input[type="text"],
-        input[type="email"] {
-            padding: 8px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-        }
-
-        button {
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        } */
     </style> <!-- Replace 'styles.css' with your CSS file name -->
 </head>
 
 <body>
-    <!-- <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="https://vunetsystems.com/">BIAS</a>
-        
-    </nav> -->
+    <form id="student-registrations-form" action="{% url 'student_registration' %}" method="post">
+
 	{% if user.is_authenticated %}
 	<div class="authenticated-content">
         <p>Welcome, {{ user.username }}!</p>
@@ -161,7 +117,7 @@ button:hover{
 
         <input type="checkbox" id="chk" aria-hidden="true">
         <div class="signup">
-            <form method="post" action="{% url 'signup' %}">
+            <!-- <form method="post" action="{% url 'signup' %}"> -->
                 {% csrf_token %}
                 <!-- {{ signup_form.as_p }} -->
                 <label for="chk" aria-hidden="true">Sign up</label>
@@ -180,7 +136,8 @@ button:hover{
                 <label for="chk" aria-hidden="true">Login</label>
 					<input type="email" name="email" placeholder="Email" required="">
 					<input type="password" name="pswd" placeholder="Password" required="">
-					<button type="submit" href="bonafide_details.html">Login</button>
+					<button type="submit">Login</button>
+
             </form>
         </div>
     </div>

@@ -24,7 +24,6 @@ from bonafide_management.views import student_registration, STUDENTSUCCESSVIEW, 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('accounts/', include('bonafide.urls')),
     path(
         "",
         TemplateView.as_view(template_name="base.html"),
@@ -33,16 +32,14 @@ urlpatterns = [
     path('bonafide_details/', bonafide_details, name='bonafide_details'),
     path('student-registration/', views.student_registration, name='student_registration'),
     path('admin_login/',admin_login,name='admin_login'),
-    # path('admin_login/', admin_login_page, name='admin_login'),
     path("student-success/", STUDENTSUCCESSVIEW.as_view(), name="student_success"),
-    # path('signup/', signup, name='signup'),
-    # path('login/', login, name='login'),
-    # path('login_admin/', login_admin, name='login_admin'),
+    
     path('admin_home/',admin_home, name='admin_home'),
-    path('bonafide_details/', bonafide_details, name='bonafide_details'),
+    # path('bonafide_details/', bonafide_details, name='bonafide_details'),
     path('signup/', signup, name='signup'),
     path('login/', login, name='login'),
-    path('base/', base_view, name='base'),
-    # path('student-home/', student_home, name='student_home'),
-    # path('save_bonafide_details/', views.save_bonafide_details_view, name='save_bonafide_details'),
+    # path('base/', base_view, name='base'),
+    path('verify_login_otp/', views.verify_login_otp, name='verify_login_otp'),
+    # path('', lambda request: redirect('base'), name='home_redirect'),
+    
 ]

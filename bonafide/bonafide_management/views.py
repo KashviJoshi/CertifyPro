@@ -11,6 +11,9 @@ from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+import random 
+from django.conf import settings
+from django.core.mail import send_mail
 
 
 @login_required(login_url='/login/')  # Ensure the user is logged in to access this view
@@ -41,16 +44,24 @@ def admin_login(request):
 
 def signup(request):
     if request.method == 'POST':
-        
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             email = form.cleaned_data['email']
             
             # Check if the email domain is allowed
             if email.endswith('@birlainstitute.co.in'):
-                user = form.save()
-                login(request, user)
-                return redirect('bonafide_details')
+                # Generate OTP
+                otp = generate_otp()
+
+                # Save the OTP in the session for verification
+                request.session['signup_otp'] = otp
+
+                # Send OTP to user's email
+                send_otp_email(email, otp)
+
+                # Redirect to OTP verification page
+                return render(request, 'otp_verification.html')
+
             else:
                 messages.error(request, "Email domain not allowed.")
         else:
@@ -60,21 +71,37 @@ def signup(request):
 
     return render(request, 'student_registration.html', {'form': form})
 
+
 def login(request):
     if request.method == 'POST':
-        username = request.POST.get("username")
+        email = request.POST.get("email")
         password = request.POST.get("password")
-        error = "error Invalid Credentials"
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            return(request,"bonafide_details.html")
-        else:
-            return render(request, "bonafide_details.html", {'error': error})
-            # return render(request, "student_registration.html", {'error': error})
 
-    else:
-        return(request,"bonafide_details.html")
-        # return render(request,"student_registration.html")
+        error = "Invalid Credentials"
+
+        # Check if the email domain is allowed
+        if email.endswith('@birlainstitute.co.in'):
+            user = authenticate(request, email=email, password=password)
+
+            if user is not None:
+                # Generate OTP
+                otp = generate_otp()
+
+                # Save the OTP in the session for verification
+                request.session['login_otp'] = otp
+
+                # Send OTP to user's email
+                send_otp_email(email, otp)
+
+                # Redirect to OTP verification page
+                return render(request, 'otp_verification.html')
+
+            else:
+                messages.error(request, error)
+        else:
+            messages.error(request, "Email domain not allowed.")
+
+    return render(request, 'bonafide_details.html')
 
 
 def admin_home(request):
@@ -113,13 +140,49 @@ def bonafide_details(request):
             Application_Date=Application_Date,
         )
 
-        return redirect('base.html')  # Redirect to a success page after saving data
+        return redirect('base')  # Redirect to a success page after saving data
 
     return render(request, 'bonafide_details.html')
 
 
 def base_view(request):
     return render(request, 'base.html')
+
+
+def generate_otp():
+    return str(random.randint(100000, 999999))
+
+def send_otp_email(email, otp):
+    # Implement your email sending logic here
+    # You can use Django's built-in email sending functions
+    # Example using Django's send_mail:
+    from django.core.mail import send_mail
+
+    subject = 'OTP for Login'
+    message = f'Your OTP for login is: {otp}'
+    from_email = 'kashvijoshi1202@gmail.com'  # Replace with your email
+    recipient_list = [email]
+
+    send_mail(subject, message, from_email, recipient_list)
+
+
+def verify_login_otp(request):
+    if request.method == 'POST':
+        submitted_otp = request.POST.get("otp")
+        stored_otp = request.session.get('login_otp')
+
+        if submitted_otp == stored_otp:
+            # Clear the stored OTP from the session
+            del request.session['login_otp']
+
+            # Perform login
+            # (You can redirect to the desired page or perform additional actions)
+            return redirect('bonafide_details')
+        else:
+            messages.error(request, "Invalid OTP.")
+    
+    # Redirect to the login page if OTP verification fails
+    return render(request, 'bonafide_details.html')  # Update the template name if needed
 
 
 class STUDENTDETAILSVIEW(View):
