@@ -1,0 +1,59 @@
+{% extends 'headerfooter.html' %}
+{% block mybody%}
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="https://vunetsystems.com/">BIAS</a>
+    <div class="ml-auto mr-2">
+      <a class="navbar-brand" href="{% url 'logoutnow' %}">LOGOUT</a>
+    </div>
+</nav>
+
+
+
+
+<div class="container " style="padding: 20px;">
+
+
+
+
+  <div class='parent' style="width: 100%;
+      display: flex;justify-content: space-between;">
+    <p style="font-size: 30px;font-weight: 800;">Student List</p>
+    <!-- <button style="padding:0px;background-color: transparent;border: 0px;"><a href="{% url 'student_registration' %}" -->
+        <!-- style="padding:10px;background-color: aqua;color: black;border: 1px solid grey;">Add New Customer</a></button> -->
+  </div>
+  <br><br>
+  <table id="myTable" class="table table-striped">
+    <thead>
+      <tr>
+        <!-- <th>Index</th> -->
+        <th style="width:200px;">Student ID</th>
+        <th style="width:200px;">Name</th>
+        <th style="width:200px;">Bonafide</th>
+        <th style="width:200px;">View</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Loop through the customer data and generate table rows -->
+
+      {% for student in student_list %}
+      <tr>
+        <td style="width:200px;">{{ student.id }}</td>
+        <td style="width:200px;">{{ student }}</td>
+        <td style="width:200px;">{{ student.email }}</td>
+        <td>
+          <a href="{% url 'bonafide_details_form' %}">Generate Bonafide</a>
+        </td>
+        <td>
+          <button onclick="viewLicense({{ customer.id }})">View Bonafide</button>
+        </td>
+
+
+
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+</div>
+{% endblock %}
